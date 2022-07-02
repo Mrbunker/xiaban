@@ -1,7 +1,17 @@
 import styled from "styled-components";
 import { useCountDown } from "ahooks";
+import { StateUpdater } from "preact/hooks";
 
-export const Time = ({ targetDate }: { targetDate: string | undefined }) => {
+export const Time = ({
+  targetDate,
+  setTitle,
+}: {
+  targetDate: string;
+  setTitle: StateUpdater<{
+    content: string;
+    ani: boolean;
+  }>;
+}) => {
   const [, formattedRes] = useCountDown({
     targetDate,
     interval: 1,
@@ -11,9 +21,16 @@ export const Time = ({ targetDate }: { targetDate: string | undefined }) => {
   return (
     <TimeWraper>
       <div>距离下班还有：</div>
-      <TimeStyle className="highlight">
+      <TimeStyle
+        className="highlight"
+        onClick={() => {
+          const copyString = hours === 0 ? `${minutes}分钟` : `${hours}:${minutes}`;
+          navigator.clipboard.writeText(copyString);
+          setTitle({ content: `复制时间成功 [${copyString}]`, ani: true });
+        }}
+      >
         {hours === 0 && minutes === 0 && minutes === 0 && seconds === 0 && milliseconds === 0 ? (
-          <div>现在</div>
+          <span>现在</span>
         ) : (
           <>
             <span>{hours}:</span>
