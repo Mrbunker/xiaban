@@ -1,18 +1,19 @@
 import { Time } from "./components/Time";
-import { useLocalStorageState } from "ahooks";
-import styled from "styled-components";
 import TimeSelect from "./components/TimeSelect";
 import { getToday } from "./tools/momentP";
+import { useLocalStorageState } from "ahooks";
+import styled from "styled-components";
 import { useEffect, useRef, useState } from "preact/hooks";
 
 export function App() {
   const eightClock = getToday("18:00");
+  /** 倒计时目标时间，下班时间 localstorage */
   const [targetDate, setTargetDate] = useLocalStorageState<string>("xiaban", { defaultValue: eightClock.toString() });
 
   const [title, setTitle] = useState({ content: "时间不对？", ani: false });
   const timerRef = useRef(0);
   useEffect(() => {
-    timerRef.current = setTimeout(() => setTitle({ content: "时间不对？", ani: false }), 2500);
+    timerRef.current = window.setTimeout(() => setTitle({ content: "时间不对？", ani: false }), 2500);
     return () => clearTimeout(timerRef.current);
   }, [title]);
 

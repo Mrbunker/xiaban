@@ -51,12 +51,7 @@ export default function ({
       }}
     >
       {!showSelect ? (
-        <Title
-          className={`highlight ${title.ani?"right-in":""}`}
-          // ani={title.ani}
-        >
-          {title.content}
-        </Title>
+        <Title className={`highlight ${title.ani ? "right-in" : ""}`}>{title.content}</Title>
       ) : (
         <TranslateWraper tx={tx}>
           <div className="translate">
@@ -79,6 +74,7 @@ export default function ({
                 /** 禁用0~14 */
                 return { disabledHours: () => Array.from({ length: 12 }, (_item, index) => index) };
               }}
+              value={moment(targetDate)}
               hideDisabledOptions={true}
               defaultValue={moment("18:00", "HH:mm")}
             />

@@ -2,5 +2,5 @@
 export const getToday = (value: string) => {
   const valueSplit = value.split(":");
   const now = new Date();
-  return new Date(now.getFullYear(), now.getMonth(), now.getDate(), Number(valueSplit[0]), Number(valueSplit[1]));
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate(), Number(valueSplit[0]), Number(valueSplit[1])).toUTCString();
 };
