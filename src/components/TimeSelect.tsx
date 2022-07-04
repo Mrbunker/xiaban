@@ -1,9 +1,9 @@
 import { StateUpdater, useEffect, useState } from "preact/hooks";
 import moment from "moment";
-import type { Moment } from "moment";
 import { Button, Radio, RadioChangeEvent, TimePicker } from "antd";
 import styled from "styled-components";
 import { getToday } from "../tools/momentP";
+import type { Moment } from "moment";
 
 export default function ({
   targetDate,

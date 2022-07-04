@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useCountDown } from "ahooks";
-import { StateUpdater } from "preact/hooks";
+import { StateUpdater, useEffect, useRef } from "preact/hooks";
+import ClipboardJS from "clipboard";
 
 export const Time = ({
   targetDate,
@@ -18,18 +19,31 @@ export const Time = ({
     onEnd: () => {},
   });
   const { hours, minutes, seconds, milliseconds } = formattedRes;
+  const isRightnow = hours === 0 && minutes === 0 && minutes === 0 && seconds === 0 && milliseconds === 0;
+  const copyString = isRightnow ? "现在" : hours === 0 ? `${minutes + "分钟"}` : `${hours}:${minutes}`;
+
+  const copyBtnRef = useRef<any>(null);
+  useEffect(() => {
+    const clip = new ClipboardJS(copyBtnRef.current, { text: () => copyString });
+    setTitle({ content: `复制时间成功 [${copyString}]`, ani: true });
+    return () => clip?.destroy && clip.destroy();
+  }, [copyBtnRef, copyString]);
+
+  useEffect(() => {
+    document.title = copyString;
+  }, [minutes]);
   return (
     <TimeWraper>
       <div>距离下班还有：</div>
       <TimeStyle
         className="highlight"
+        ref={copyBtnRef}
         onClick={() => {
-          const copyString = hours === 0 ? `${minutes}分钟` : `${hours}:${minutes}`;
-          navigator.clipboard.writeText(copyString);
-          setTitle({ content: `复制时间成功 [${copyString}]`, ani: true });
+          // const result=navigator.clipboard.writeText(copyString);
+          // setTitle({ content: `复制时间成功 [${copyString}]`, ani: true });
         }}
       >
-        {hours === 0 && minutes === 0 && minutes === 0 && seconds === 0 && milliseconds === 0 ? (
+        {isRightnow ? (
           <span>现在</span>
         ) : (
           <>
