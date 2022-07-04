@@ -16,12 +16,9 @@ fs.writeFile("./docs/CNAME", "mrbk.xyz", { flag: "a+" }, (err) => {
   console.log("「CNAME file created successfully」");
 });
 
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-rl.question("input git message:", (message) => {
-  shell.exec("git add .");
-  shell.exec(`git commit -m ${message}`);
-  shell.exec("git pull");
-  shell.exec("git push");
-  console.log("「git commit successfully」");
-  rl.close();
-});
+shell.exec("git add .");
+shell.exec(`$message = Read-Host "input commit message: "`);
+shell.exec(`git commit -m $message`);
+shell.exec("git pull");
+shell.exec("git push");
+console.log("「git commit successfully」");
