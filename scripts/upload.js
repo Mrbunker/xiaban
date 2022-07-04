@@ -1,5 +1,4 @@
 const fs = require("fs");
-const readline = require("readline");
 const shell = require("shelljs");
 fs.rename("./docs", `./docsBuckup/docs_${new Date().getTime()}`, (err) => {
   if (err) throw err;
@@ -17,8 +16,8 @@ fs.writeFile("./docs/CNAME", "mrbk.xyz", { flag: "a+" }, (err) => {
 });
 
 shell.exec("git add .");
-shell.exec(`$message = Read-Host "input commit message: "`);
-shell.exec(`git commit -m $message`);
+const message = require("yargs").argv._[0];
+shell.exec(`git commit -m ${message}`);
 shell.exec("git pull");
 shell.exec("git push");
 console.log("「git commit successfully」");

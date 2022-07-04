@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "buildDocs": "vite build && node scripts/buildDocs"
+    "upload": "vite build && node scripts/upload"
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
@@ -25,6 +25,7 @@
     "shelljs": "^0.8.5",
     "typescript": "^4.5.4",
     "vite": "^2.9.9",
-    "vite-plugin-imp": "^2.2.0"
+    "vite-plugin-imp": "^2.2.0",
+    "yargs": "^17.5.1"
   }
 }
