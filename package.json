@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "upload": "vite build && node scripts/upload"
+    "upload": "vite build && node scripts/buildDocs && node scripts/upload"
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",

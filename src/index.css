@@ -24,7 +24,7 @@ body {
     font-size: 12px;
   }
   .main {
-    width: 25rem;
+    width: 27.5rem;
     height: 45rem;
   }
 }
@@ -36,6 +36,6 @@ body {
   }
   .main {
     width: 40rem;
-    height: 30rem;
+    height: 40rem;
   }
 }

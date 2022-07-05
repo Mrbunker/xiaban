@@ -1,15 +1,14 @@
-import { Time } from "./components/Time";
-import TimeSelect from "./components/TimeSelect";
-import { getToday } from "./tools/momentP";
+import { Time } from "./components/CountDown";
+import TimeSelect from "./components/TimeSelecter";
+import { getHHmmMoment, getTodayDate } from "./tools/momentP";
 import { useLocalStorageState } from "ahooks";
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "preact/hooks";
+import moment from "moment";
 
 export function App() {
-
-  const eightClock = getToday("18:00");
   /** 倒计时目标时间，下班时间 localstorage */
-  const [targetDate, setTargetDate] = useLocalStorageState<string>("xiaban", { defaultValue: eightClock.toString() });
+  const [memoryTime, setMemoryTime] = useLocalStorageState<moment.Moment>("xiaban", { defaultValue: getHHmmMoment("18:00") });
 
   const [title, setTitle] = useState({ content: "时间不对？", ani: false });
   const timerRef = useRef(0);
@@ -22,12 +21,12 @@ export function App() {
     <AppWraper>
       <div className="main right-in">
         <Time
-          targetDate={targetDate}
+          memoryTime={memoryTime}
           setTitle={setTitle}
         />
         <TimeSelect
-          setTargetDate={setTargetDate}
-          targetDate={targetDate}
+          setMemoryTime={setMemoryTime}
+          memoryTime={memoryTime}
           title={title}
           setTitle={setTitle}
         />

@@ -2,17 +2,16 @@ import { StateUpdater, useEffect, useState } from "preact/hooks";
 import moment from "moment";
 import { Button, Radio, RadioChangeEvent, TimePicker } from "antd";
 import styled from "styled-components";
-import { getToday } from "../tools/momentP";
-import type { Moment } from "moment";
+import { getHHmmMoment } from "../tools/momentP";
 
 export default function ({
-  targetDate,
-  setTargetDate,
+  memoryTime,
+  setMemoryTime,
   title,
   setTitle,
 }: {
-  targetDate: string;
-  setTargetDate: (value: string) => void;
+  memoryTime: moment.Moment;
+  setMemoryTime: (value: moment.Moment) => void;
   title: { content: string; ani: boolean };
   setTitle: StateUpdater<{
     content: string;
@@ -26,17 +25,16 @@ export default function ({
   useEffect(() => {
     setShowSelect(false);
     tx !== "0%" && setTx("0%");
-    setTitle({ content: `已设置为${moment(targetDate).format("HH:mm")}`, ani: true });
-  }, [targetDate]);
+    setTitle({ content: `已设置为${moment(memoryTime).format("HH:mm")}`, ani: true });
+  }, [memoryTime]);
 
   const onRadioChange = ({ target: { value } }: RadioChangeEvent) => {
-    const formatValue = getToday(value);
-    setTargetDate(formatValue.toString());
+    setMemoryTime(getHHmmMoment(value));
   };
 
-  const onPickerChange = (value: Moment | null) => {
+  const onPickerChange = (value: moment.Moment | null) => {
     if (value === null) return;
-    setTargetDate(value.format().toString());
+    setMemoryTime(value);
   };
 
   return (
@@ -60,7 +58,7 @@ export default function ({
                 options={xiabanList}
                 onChange={onRadioChange}
                 optionType="button"
-                defaultValue={moment(targetDate).format("HH:mm")}
+                defaultValue={moment(memoryTime).format("HH:mm")}
                 buttonStyle="solid"
               />
               <Button onClick={() => setTx("-100%")}>{"其他 >"}</Button>
@@ -74,7 +72,7 @@ export default function ({
                 /** 禁用0~14 */
                 return { disabledHours: () => Array.from({ length: 12 }, (_item, index) => index) };
               }}
-              value={moment(targetDate)}
+              value={moment(memoryTime)}
               hideDisabledOptions={true}
               defaultValue={moment("18:00", "HH:mm")}
             />

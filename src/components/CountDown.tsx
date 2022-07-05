@@ -2,19 +2,21 @@ import styled from "styled-components";
 import { useCountDown } from "ahooks";
 import { StateUpdater, useEffect, useRef } from "preact/hooks";
 import ClipboardJS from "clipboard";
+import { getTodayDate } from "../tools/momentP";
+import moment from "moment";
 
 export const Time = ({
-  targetDate,
+  memoryTime,
   setTitle,
 }: {
-  targetDate: string;
+  memoryTime: moment.Moment;
   setTitle: StateUpdater<{
     content: string;
     ani: boolean;
   }>;
 }) => {
   const [, formattedRes] = useCountDown({
-    targetDate,
+    targetDate: getTodayDate(memoryTime),
     interval: 1,
     onEnd: () => {},
   });
@@ -25,7 +27,6 @@ export const Time = ({
   const copyBtnRef = useRef<any>(null);
   useEffect(() => {
     const clip = new ClipboardJS(copyBtnRef.current, { text: () => copyString });
-    setTitle({ content: `复制时间成功 [${copyString}]`, ani: true });
     return () => clip?.destroy && clip.destroy();
   }, [copyBtnRef, copyString]);
 
@@ -39,8 +40,8 @@ export const Time = ({
         className="highlight"
         ref={copyBtnRef}
         onClick={() => {
-          // const result=navigator.clipboard.writeText(copyString);
-          // setTitle({ content: `复制时间成功 [${copyString}]`, ani: true });
+          // navigator.clipboard.writeText(copyString);
+          setTitle({ content: `复制时间成功 [${copyString}]`, ani: true });
         }}
       >
         {isRightnow ? (
@@ -50,7 +51,7 @@ export const Time = ({
             <span>{hours}:</span>
             <span>{minutes}:</span>
             <span>{seconds}</span>
-            <span className="time-small">:{milliseconds}</span>
+            <span className="time-lite">:{milliseconds}</span>
           </>
         )}
       </TimeStyle>
@@ -67,7 +68,7 @@ const TimeStyle = styled.div`
   color: #cf5659;
   font-size: 6rem;
   font-weight: bold;
-  .time-small {
+  .time-lite {
     padding-left: 1rem;
     font-size: 3rem;
   }
