@@ -1,31 +1,29 @@
-import { StateUpdater, useEffect, useState } from "preact/hooks";
 import moment from "moment";
-import { Button, Radio, RadioChangeEvent, TimePicker } from "antd";
 import styled from "styled-components";
+import { useEffect, useState } from "preact/hooks";
+import { Button, Radio, RadioChangeEvent, TimePicker } from "antd";
 import { getHHmmMoment } from "../tools/momentP";
+
+import { titleType } from "../app";
 
 export default function ({
   memoryTime,
   setMemoryTime,
   title,
-  setTitle,
+  setTitleP,
 }: {
   memoryTime: moment.Moment;
   setMemoryTime: (value: moment.Moment) => void;
   title: { content: string; ani: boolean };
-  setTitle: StateUpdater<{
-    content: string;
-    ani: boolean;
-  }>;
+  setTitleP: (newTitle: titleType) => void;
 }) {
   const xiabanList = ["18:00", "17:30", "17:00"];
-  const [showSelect, setShowSelect] = useState(false);
+  const [showSelecter, setShowSelecter] = useState(false);
   const [tx, setTx] = useState<"0%" | "-100%">("0%");
-
   useEffect(() => {
-    setShowSelect(false);
+    showSelecter && setShowSelecter(false);
     tx !== "0%" && setTx("0%");
-    setTitle({ content: `已设置为${moment(memoryTime).format("HH:mm")}`, ani: true });
+    setTitleP({ content: `已设置为${moment(memoryTime).format("HH:mm")}`, ani: true });
   }, [memoryTime]);
 
   const onRadioChange = ({ target: { value } }: RadioChangeEvent) => {
@@ -38,18 +36,19 @@ export default function ({
   };
 
   return (
-    <div
-      // onMouseEnter={() => {
-      // tx !== "0%" && setTx("0%");
-      // setShowSelect(true);
-      // }}
-      onClick={() => {
-        if (showSelect) return;
-        setShowSelect(true);
-      }}
-    >
-      {!showSelect ? (
-        <Title className={`highlight ${title.ani ? "right-in" : ""}`}>{title.content}</Title>
+    <SelectWraper>
+      {!showSelecter ? (
+        <div
+          // onMouseEnter={() => {
+          // tx !== "0%" && setTx("0%");
+          // setShowSelect(true);
+          // }}
+          title={"click to select xiaban time"}
+          onClick={() => !showSelecter && setShowSelecter(true)}
+          className={`highlight ${title.ani ? "right-in" : ""}`}
+        >
+          {title.content}
+        </div>
       ) : (
         <TranslateWraper tx={tx}>
           <div className="translate">
@@ -74,20 +73,26 @@ export default function ({
               }}
               value={moment(memoryTime)}
               hideDisabledOptions={true}
-              defaultValue={moment("18:00", "HH:mm")}
             />
           </div>
         </TranslateWraper>
       )}
-    </div>
+    </SelectWraper>
   );
 }
 
+const SelectWraper = styled.div`
+  margin-top: 6rem;
+  width: 60rem;
+  height: 12rem;
+  /* background: #F0F0F0; */
+  display: flex;
+  align-items: center;
+  font-size: 1.3rem;
+`;
 const TranslateWraper = styled.div<{ tx: string }>`
-  margin-top: 12.5rem;
   width: 30rem;
   overflow-x: hidden;
-  font-size: 1rem;
   .translate {
     display: flex;
     transition: transform 0.75s;
@@ -102,9 +107,4 @@ const TranslateWraper = styled.div<{ tx: string }>`
       width: 30rem;
     }
   }
-`;
-
-const Title = styled.div`
-  margin-top: 12.5rem;
-  font-size: 1.3rem;
 `;

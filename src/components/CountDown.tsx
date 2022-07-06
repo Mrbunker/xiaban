@@ -1,20 +1,13 @@
 import styled from "styled-components";
-import { useCountDown } from "ahooks";
-import { StateUpdater, useEffect, useRef } from "preact/hooks";
 import ClipboardJS from "clipboard";
+import { useCountDown } from "ahooks";
+import { useEffect, useRef } from "preact/hooks";
 import { getTodayDate } from "../tools/momentP";
-import moment from "moment";
 
-export const Time = ({
-  memoryTime,
-  setTitle,
-}: {
-  memoryTime: moment.Moment;
-  setTitle: StateUpdater<{
-    content: string;
-    ani: boolean;
-  }>;
-}) => {
+import moment from "moment";
+import { titleType } from "../app";
+
+export const Time = ({ memoryTime, setTitleP }: { memoryTime: moment.Moment; setTitleP: (newTitle: titleType) => void }) => {
   const [, formattedRes] = useCountDown({
     targetDate: getTodayDate(memoryTime),
     interval: 1,
@@ -37,11 +30,12 @@ export const Time = ({
     <TimeWraper>
       <div>距离下班还有：</div>
       <TimeStyle
+        title={"click to copy countdown"}
         className="highlight"
         ref={copyBtnRef}
         onClick={() => {
           // navigator.clipboard.writeText(copyString);
-          setTitle({ content: `复制时间成功 [${copyString}]`, ani: true });
+          setTitleP({ content: `复制时间成功 [${copyString}]`, ani: true });
         }}
       >
         {isRightnow ? (

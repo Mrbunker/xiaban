@@ -1,34 +1,41 @@
 import { Time } from "./components/CountDown";
 import TimeSelect from "./components/TimeSelecter";
-import { getHHmmMoment, getTodayDate } from "./tools/momentP";
-import { useLocalStorageState } from "ahooks";
+import { getHHmmMoment } from "./tools/momentP";
+import { useDebounceFn, useLocalStorageState } from "ahooks";
 import styled from "styled-components";
 import { useEffect, useRef, useState } from "preact/hooks";
 import moment from "moment";
 
+export type titleType = {
+  /** 要设置的 title 文本 */
+  content: string;
+  /** 是否触发动画 */
+  ani: boolean;
+};
 export function App() {
-  /** 倒计时目标时间，下班时间 localstorage */
+  /** 倒计时目标时间（下班时间） localStorage */
   const [memoryTime, setMemoryTime] = useLocalStorageState<moment.Moment>("xiaban", { defaultValue: getHHmmMoment("18:00") });
 
   const [title, setTitle] = useState({ content: "时间不对？", ani: false });
-  const timerRef = useRef(0);
-  useEffect(() => {
-    timerRef.current = window.setTimeout(() => setTitle({ content: "时间不对？", ani: false }), 2500);
-    return () => clearTimeout(timerRef.current);
-  }, [title]);
+
+  const { run: setTitleBack } = useDebounceFn(() => setTitle({ content: "时间不对？", ani: false }), { wait: 2500 });
+  const setTitleP = (newTitle: titleType) => {
+    setTitle(newTitle);
+    setTitleBack();
+  };
 
   return (
     <AppWraper>
       <div className="main right-in">
         <Time
           memoryTime={memoryTime}
-          setTitle={setTitle}
+          setTitleP={setTitleP}
         />
         <TimeSelect
           setMemoryTime={setMemoryTime}
           memoryTime={memoryTime}
           title={title}
-          setTitle={setTitle}
+          setTitleP={setTitleP}
         />
       </div>
     </AppWraper>
