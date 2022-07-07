@@ -21,10 +21,10 @@ body {
 @media screen and (max-width: 600px) {
   html,
   body {
-    font-size: 12px;
+    font-size: 8px;
   }
   .main {
-    width: 27.5rem;
+    width: 30rem;
     max-height: 45rem;
   }
 }
