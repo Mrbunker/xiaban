@@ -1,9 +1,9 @@
 import { Time } from "./components/CountDown";
 import TimeSelect from "./components/TimeSelecter";
-import { getHHmmMoment } from "./tools/momentP";
+import { useState } from "preact/hooks";
 import { useDebounceFn, useLocalStorageState } from "ahooks";
+import { getHHmmMoment } from "./tools/momentP";
 import styled from "styled-components";
-import { useEffect, useRef, useState } from "preact/hooks";
 import moment from "moment";
 
 export type titleType = {

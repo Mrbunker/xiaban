@@ -2,20 +2,22 @@ import styled from "styled-components";
 import ClipboardJS from "clipboard";
 import { useCountDown } from "ahooks";
 import { useEffect, useRef } from "preact/hooks";
-import { getTodayDate } from "../tools/momentP";
+import { getHHmmMoment, getTodayDate } from "../tools/momentP";
 
 import moment from "moment";
 import { titleType } from "../app";
 
 export const Time = ({ memoryTime, setTitleP }: { memoryTime: moment.Moment; setTitleP: (newTitle: titleType) => void }) => {
-  const [, formattedRes] = useCountDown({
-    targetDate: getTodayDate(memoryTime),
+  /** 如果用户打开时间是 12 点之前，倒计时的targetTime 则设置为 12点 */
+  const isMorning = moment().hours() < 12;
+  const [_, formattedRes] = useCountDown({
+    targetDate: isMorning ? getTodayDate(moment().hours(12).minutes(0).milliseconds(0)) : getTodayDate(memoryTime),
     interval: 1,
     onEnd: () => {},
   });
   const { hours, minutes, seconds, milliseconds } = formattedRes;
   const isRightnow = hours === 0 && minutes === 0 && minutes === 0 && seconds === 0 && milliseconds === 0;
-  const copyString = isRightnow ? "现在" : hours === 0 ? `${minutes + "分钟"}` : `${hours}:${minutes}`;
+  const copyString = isRightnow ? "赶紧溜！" : hours === 0 ? `${minutes}分钟` : `${hours}小时 ${minutes}分钟`;
 
   const copyBtnRef = useRef<any>(null);
   useEffect(() => {
@@ -24,8 +26,13 @@ export const Time = ({ memoryTime, setTitleP }: { memoryTime: moment.Moment; set
   }, [copyBtnRef, copyString]);
 
   useEffect(() => {
-    document.title = copyString;
-  }, [minutes]);
+    if (minutes === 0) {
+      document.title = `${seconds}秒`;
+      // document.title = `${seconds}.${milliseconds.toString().split("")[0]}秒`;
+    } else {
+      document.title = copyString;
+    }
+  }, [seconds]);
   return (
     <TimeWraper>
       <div>距离下班还有：</div>

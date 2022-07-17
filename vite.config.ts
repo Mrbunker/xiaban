@@ -12,7 +12,6 @@ export default defineConfig({
         javascriptEnabled: true,
         // 重写 less 变量，定制样式
         modifyVars: {
-          // '@brand-color': '#CF5659',
           "@primary-color": "#CF5659",
         },
       },

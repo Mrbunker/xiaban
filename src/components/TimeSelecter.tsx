@@ -2,7 +2,7 @@ import moment from "moment";
 import styled from "styled-components";
 import { useEffect, useState } from "preact/hooks";
 import { Button, TimePicker } from "antd";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+
 
 import { titleType } from "../app";
 
@@ -51,7 +51,7 @@ export default function ({
             format={"HH:mm"}
             minuteStep={10}
             disabledTime={() => {
-              /** 禁用0~16 */
+              // 禁用0~16
               return { disabledHours: () => Array.from({ length: 16 }, (_item, index) => index) };
             }}
             value={moment(memoryTime)}
@@ -69,7 +69,6 @@ const TranslateWraper = styled.div<{ tx: string }>`
   margin-top: 10rem;
   font-size: 18px;
   /* font-size: 1.3rem; */
-  /* min-font */
   overflow-x: hidden;
   .translate {
     display: flex;
