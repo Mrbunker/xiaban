@@ -14,7 +14,7 @@ export const Time = ({ memoryTime, setTitleP }: { memoryTime: moment.Moment; set
   const [_, formattedRes] = useCountDown({
     targetDate: isMorning ? getTodayDate(moment().hours(12).minutes(0).milliseconds(0)) : getTodayDate(memoryTime),
     interval: 1,
-    onEnd: () => !isMorning && setTitleP({ content: "赶紧干饭了！", ani: true }),
+    onEnd: () => isMorning && setTitleP({ content: "赶紧干饭了！", ani: true }),
   });
   const { hours, minutes, seconds, milliseconds } = formattedRes;
   const isRightnow = hours === 0 && minutes === 0 && minutes === 0 && seconds === 0 && milliseconds === 0;

@@ -56,7 +56,7 @@ const AppWraper = styled.div`
     }
     40% {
       opacity: 0;
-      transform: translateX(-1rem);
+      transform: translateX(-2rem);
     }
     80% {
       opacity: 1;
