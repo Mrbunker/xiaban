@@ -1,10 +1,10 @@
 import moment from "moment";
 import styled from "styled-components";
 import { useEffect, useState } from "preact/hooks";
-import { Button, TimePicker } from "antd";
-
+import { TimePicker } from "antd";
 
 import { titleType } from "../app";
+import { useClickAway } from "ahooks";
 
 export default function ({
   memoryTime,
@@ -17,10 +17,11 @@ export default function ({
   title: { content: string; ani: boolean };
   setTitleP: (newTitle: titleType) => void;
 }) {
+  /** selecter 的滚动 state */
   const [tx, setTx] = useState<"0%" | "-100%">("0%");
   useEffect(() => {
     tx !== "0%" && setTx("0%");
-    setTitleP({ content: `已设置为${moment(memoryTime).format("HH:mm")}`, ani: true });
+    setTitleP({ content: `已设置下班时间为 ${moment(memoryTime).format("HH:mm")}`, ani: true });
   }, [memoryTime]);
 
   const onPickerChange = (value: moment.Moment | null) => {
@@ -28,24 +29,32 @@ export default function ({
     setMemoryTime(value);
   };
 
+  useClickAway(
+    () => tx !== "0%" && setTx("0%"),
+    () => document.querySelector(".translate-picker"),
+  );
+
   return (
     <TranslateWraper tx={tx}>
       <div className="translate">
         <div
           className={`translate-btn highlight ${title.ani ? "right-in" : ""}`}
           title={"click to select xiaban time"}
-          onClick={() => setTx("-100%")}
+          onClick={(e) => {
+            e.stopPropagation();
+            setTx("-100%");
+          }}
         >
           {title.content}
         </div>
 
         <div className="translate-picker">
-          <Button
+          {/* <Button
             onClick={() => setTx("0%")}
             className="translate-picker-back"
           >
             {"<"}
-          </Button>
+          </Button> */}
           <TimePicker
             onChange={onPickerChange}
             format={"HH:mm"}

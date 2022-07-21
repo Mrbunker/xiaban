@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import ClipboardJS from "clipboard";
-import { useCountDown } from "ahooks";
 import { useEffect, useRef } from "preact/hooks";
+import { useCountDown } from "ahooks";
 import { getTodayDate } from "../tools/momentP";
+import { useSetDoc } from "../tools/hookP";
 
 import moment from "moment";
 import { titleType } from "../app";
@@ -13,8 +14,12 @@ export const Time = ({ memoryTime, setTitleP }: { memoryTime: moment.Moment; set
 
   const [_, formattedRes] = useCountDown({
     targetDate: isMorning ? getTodayDate(moment().hours(12).minutes(0).milliseconds(0)) : getTodayDate(memoryTime),
+    // targetDate: new Date(),//调试用，触发倒计时结束
     interval: 1,
-    onEnd: () => isMorning && setTitleP({ content: "赶紧干饭了！", ani: true }),
+    onEnd: () => {
+      setIcon("/end.png");
+      isMorning && setTitleP({ content: "赶紧干饭了！", ani: true });
+    },
   });
   const { hours, minutes, seconds, milliseconds } = formattedRes;
   const isRightnow = hours === 0 && minutes === 0 && minutes === 0 && seconds === 0 && milliseconds === 0;
@@ -26,10 +31,7 @@ export const Time = ({ memoryTime, setTitleP }: { memoryTime: moment.Moment; set
     return () => clip?.destroy && clip.destroy();
   }, [copyBtnRef, tipString]);
 
-  useEffect(() => {
-    // document.title = `${seconds}.${milliseconds.toString().split("")[0]}秒`;
-    document.title = minutes === 0 ? `${seconds}秒` : tipString;
-  }, [seconds]);
+  const { setIcon } = useSetDoc(formattedRes, "/default.png");
   return (
     <TimeWraper>
       <div>距离{isMorning ? `干饭` : `下班`}还有：</div>
